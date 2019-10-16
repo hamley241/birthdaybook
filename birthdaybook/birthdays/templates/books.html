@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+{% if birthdays_list %}
+    <ul>
+                NAME        | Birthday
+
+    {% for birthday in birthdays_list %}
+        <li>{{ birthday.name }}  | {{birthday.birthday}} | <a href="/birthdays/{{ birthday.id }}/">Edit</a> | <a href="/birthdays/delete/{{ birthday.id }}/">Delete</a>  </li>
+    {% endfor %}
+    </ul>
+{% else %}
+<p>No Birthdays are available.</p>
+{% endif %}
+
+<a href="/birthdays/add/">Add new Birthday</a>
+</body>
