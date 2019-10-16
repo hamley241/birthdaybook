@@ -11,7 +11,7 @@
                 NAME        | Birthday
 
     {% for birthday in birthdays_list %}
-        <li>{{ birthday.name }}  | {{birthday.birthday}} | <a href="/birthdays/{{ birthday.id }}/">Edit</a> | <a href="/birthdays/delete/{{ birthday.id }}/">Delete</a>  </li>
+        <li>{{ birthday.name }}  | {{birthday.birthday}} | <a href="/birthdays/{{ birthday.id }}">Edit</a> | <a href="/birthdays/delete/{{ birthday.id }}/">Delete</a>  </li>
     {% endfor %}
     </ul>
 {% else %}
