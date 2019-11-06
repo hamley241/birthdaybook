@@ -89,6 +89,10 @@ def update(request,birthday_id):
         raise Http404("Question does not exist")
     return redirect(index)
 
+def delete_everything(request):
+    Book.objects.all().delete()
+    return redirect(index)
+
 def add(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
