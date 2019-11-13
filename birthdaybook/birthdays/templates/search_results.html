@@ -8,21 +8,8 @@
 {% if error_msg %}
 <p><font color="red"> {{error_msg}}</font><P>
 {% endif %}
-
-    {% if bdays %}
-    <Bold>Todays Birthdays</Bold>
-    <ul>
-                NAME        | Birthday
-
-    {% for birthday in bdays %}
-        <li>{{ birthday.name }}  | {{birthday.birthday}} | <a href="/birthdays/{{ birthday.id }}">Edit</a> | <a href="/birthdays/delete/{{ birthday.id }}/">Delete</a>  </li>
-    {% endfor %}
-    </ul>
-
-    {% endif %}
 {% if birthdays_list %}
-    <Bold>All Birthdays</Bold>
-
+    <bold>Search results</bold>
     <ul>
                 NAME        | Birthday
 
@@ -35,6 +22,6 @@
 {% endif %}
 
 <a href="/birthdays/add/">Add new Birthday</a><br/>
-<a href="/birthdays/search/">search</a><br/>
+<a href="/birthdays/">Home</a><br/>
 <a href="/birthdays/deleteall/">Delete all</a>
 </body>

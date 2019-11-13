@@ -29,6 +29,8 @@ from datetime import date
 import datetime
 from  django.db import IntegrityError
 from calendar import IllegalMonthError
+from dateutil import parser
+
 
 def index(request):
     if not request.user.is_authenticated:
@@ -43,8 +45,10 @@ def index(request):
     # print(dir(request.user))
 
     print("Index is being callled")
+    alerts = get_alerts(request.user)
     context = {
         'birthdays_list': request.user.book_set.all(),
+        'bdays': alerts
         # "error_msg":error_msg
     }
     print(request.user.book_set.all())
@@ -149,8 +153,8 @@ def add(request):
     from dateutil import parser
 
     try:
-        request.user.book_set.create(name=name,birthday=dt)
         dt = parser.parse(birthday).date()
+        request.user.book_set.create(name=name,birthday=dt)
 
     except IntegrityError as e:
         print("Integrity ")
@@ -166,3 +170,100 @@ def add(request):
         print(str(e))
         return para_index(request,error_msg= "Server error".format(str(name)))
     return redirect(index)
+
+
+def get_alerts(user):
+    # if not request.user.is_authenticated:
+    #     return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    # if request.method == 'GET':
+    #     return render(request, 'add.html', {'date': "Jun 1 2005"})
+    #
+    # birthday = request.POST['birthday']
+    # name = request.POST['name']
+
+    dt = datetime.datetime.today()
+    day = dt.day
+    month = dt.month
+    # self.
+    # dt = None
+    blist = Book.objects.filter(user=user, birthday__month=month, birthday__day=day)
+    return blist
+    # if  not birthday and not name:
+    #     return para_index(request, error_msg="Inputs are not valid")
+    # try:
+    #     if  birthday:
+    #         dt = parser.parse(birthday).date()
+    #     if not name:
+    #         pass
+    #     elif not dt:
+    #         blist = Book.objects.filter(user=request.user, name=name)
+    #     else:
+    #         blist = Book.objects.filter(user=request.user, name=name, birthday=dt)
+    #     print(blist)
+    #     print(type(blist))
+    # except IntegrityError as e:
+    #     print("Integrity ")
+    #     return para_index(request, error_msg="Person {} is already present".format(str(name)))
+    # except ValueError as e:
+    #     print("Value Error ")
+    #     return para_index(request, error_msg="Input data is not valid ")
+    # except IllegalMonthError as e:
+    #     print("Illegal Error ")
+    #     return para_index(request, error_msg="Month in birthday is not valid ")
+    #
+    # except Exception as e:
+    #     print(str(e))
+    #     return para_index(request,error_msg= "Server error".format(str(name)))
+
+    # template = loader.get_template('search_results.html')
+    # context = {
+    #     'birthdays_list': blist,
+    # }
+    # # print(request.user.book_set.all())
+    # return HttpResponse(template.render(context, request))
+
+
+def search(request):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    if request.method == 'GET':
+            return render(request, 'add.html', {'date': "Jun 1 2005"})
+
+    birthday = request.POST['birthday']
+    name = request.POST['name']
+    dt = None
+    if  not birthday and not name:
+        return para_index(request, error_msg="Inputs are not valid")
+    try:
+        if  birthday:
+            dt = parser.parse(birthday).date()
+        if not name:
+            blist = Book.objects.filter(user=request.user, birthday=dt)
+        elif not dt:
+            blist = Book.objects.filter(user=request.user, name=name)
+        else:
+            blist = Book.objects.filter(user=request.user, name=name, birthday=dt)
+        print(blist)
+        print(type(blist))
+    except IntegrityError as e:
+        print("Integrity ")
+        return para_index(request, error_msg="Person {} is already present".format(str(name)))
+    except ValueError as e:
+        print("Value Error ")
+        return para_index(request, error_msg="Input data is not valid ")
+    except IllegalMonthError as e:
+        print("Illegal Error ")
+        return para_index(request, error_msg="Month in birthday is not valid ")
+
+    except Exception as e:
+        print(str(e))
+        return para_index(request,error_msg= "Server error".format(str(name)))
+
+    template = loader.get_template('search_results.html')
+    context = {
+        'birthdays_list': blist,
+    }
+    # print(request.user.book_set.all())
+    return HttpResponse(template.render(context, request))
+
+
