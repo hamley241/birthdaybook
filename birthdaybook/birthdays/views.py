@@ -110,13 +110,13 @@ def update(request,birthday_id):
     except Book.DoesNotExist:
         # raise Http404("Question does not exist")
         print("Does not Exist")
-        return redirect(index,"Birthday for {} does not exist".format(str(name)))
+        return para_index(request, "Birthday for {} does not exist".format(str(name)))
     except IntegrityError as e:
         print("Integrity ")
-        return redirect(index,"Person {} is already present".format(str(name)))
+        return para_index(request, error_msg="Person {} is already present".format(str(name)))
     except Exception as e:
         print(str(e))
-        return redirect(index,"Person {} is already present".format(str(name)))
+        return para_index(request, error_msg="Server error".format(str(name)))
     return redirect(index)
 
 
@@ -133,10 +133,12 @@ def add(request):
 
     name = request.POST['name']
     birthday = request.POST['birthday']
+    if not name or not birthday:
+        return para_index(request, error_msg="Inputs are not valid".format(str(name)))
+
     from dateutil import parser
     dt = parser.parse(birthday).date()
 
-    # print(str(request))
     try:
         request.user.book_set.create(name=name,birthday=dt)
 
@@ -147,10 +149,3 @@ def add(request):
         print(str(e))
         return para_index(request,error_msg= "Server error".format(str(name)))
     return redirect(index)
-
-# def delete(request):
-#     if not request.user.is_authenticated:
-#         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-#     user = request.user
-#     delete_id = request.
-#     user.book_set.delete()
