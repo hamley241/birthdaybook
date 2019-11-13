@@ -27,6 +27,7 @@ from django.http import Http404
 from django.shortcuts import render
 from datetime import date
 import datetime
+from  django.db import IntegrityError
 
 def index(request):
     if not request.user.is_authenticated:
@@ -43,6 +44,27 @@ def index(request):
     print("Index is being callled")
     context = {
         'birthdays_list': request.user.book_set.all(),
+        # "error_msg":error_msg
+    }
+    print(request.user.book_set.all())
+    return HttpResponse(template.render(context, request))
+
+def para_index(request, error_msg=None):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    # print(str(request))
+    template = loader.get_template('books.html')
+    # username = request.POST['username']
+    # password = request.POST['password']
+    # user = authenticate(request, username=username, password=password)
+    # if user is not None:
+    #     return HttpResponse("Hello, world. You're at the polls index.")
+    # print(dir(request.user))
+
+    print("Index is being callled")
+    context = {
+        'birthdays_list': request.user.book_set.all(),
+        "error_msg":error_msg
     }
     print(request.user.book_set.all())
     return HttpResponse(template.render(context, request))
@@ -86,8 +108,17 @@ def update(request,birthday_id):
         birthday_obj.save()
         # birthday_obj.date =
     except Book.DoesNotExist:
-        raise Http404("Question does not exist")
+        # raise Http404("Question does not exist")
+        print("Does not Exist")
+        return redirect(index,"Birthday for {} does not exist".format(str(name)))
+    except IntegrityError as e:
+        print("Integrity ")
+        return redirect(index,"Person {} is already present".format(str(name)))
+    except Exception as e:
+        print(str(e))
+        return redirect(index,"Person {} is already present".format(str(name)))
     return redirect(index)
+
 
 def delete_everything(request):
     Book.objects.all().delete()
@@ -109,8 +140,12 @@ def add(request):
     try:
         request.user.book_set.create(name=name,birthday=dt)
 
+    except IntegrityError as e:
+        print("Integrity ")
+        return para_index(request, error_msg="Person {} is already present".format(str(name)))
     except Exception as e:
-        raise HttpResponse("BAD REQUEST")
+        print(str(e))
+        return para_index(request,error_msg= "Server error".format(str(name)))
     return redirect(index)
 
 # def delete(request):
