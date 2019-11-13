@@ -28,6 +28,7 @@ from django.shortcuts import render
 from datetime import date
 import datetime
 from  django.db import IntegrityError
+from calendar import IllegalMonthError
 
 def index(request):
     if not request.user.is_authenticated:
@@ -96,12 +97,13 @@ def update(request,birthday_id):
     birthday_id = request.POST['id']
     # print(str(request))
     from dateutil import parser
-    dt = parser.parse(birthday).date()
+
     print(birthday)
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     # print(str(request))
     try:
+        dt = parser.parse(birthday).date()
         birthday_obj = Book.objects.get(pk=birthday_id)
         birthday_obj.name = name
         birthday_obj.birthday = dt
@@ -114,7 +116,15 @@ def update(request,birthday_id):
     except IntegrityError as e:
         print("Integrity ")
         return para_index(request, error_msg="Person {} is already present".format(str(name)))
+    except ValueError as e:
+        print("Value Error ")
+        return para_index(request, error_msg="Input data is not valid ")
+    except IllegalMonthError as e:
+        print("Illegal Error ")
+        return para_index(request, error_msg="Month in birthday is not valid ")
+
     except Exception as e:
+        print("Final exception")
         print(str(e))
         return para_index(request, error_msg="Server error".format(str(name)))
     return redirect(index)
@@ -137,14 +147,21 @@ def add(request):
         return para_index(request, error_msg="Inputs are not valid".format(str(name)))
 
     from dateutil import parser
-    dt = parser.parse(birthday).date()
 
     try:
         request.user.book_set.create(name=name,birthday=dt)
+        dt = parser.parse(birthday).date()
 
     except IntegrityError as e:
         print("Integrity ")
         return para_index(request, error_msg="Person {} is already present".format(str(name)))
+    except ValueError as e:
+        print("Value Error ")
+        return para_index(request, error_msg="Input data is not valid ")
+    except IllegalMonthError as e:
+        print("Illegal Error ")
+        return para_index(request, error_msg="Month in birthday is not valid ")
+
     except Exception as e:
         print(str(e))
         return para_index(request,error_msg= "Server error".format(str(name)))
