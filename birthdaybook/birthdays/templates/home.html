@@ -1,7 +1,10 @@
 <!-- templates/home.html-->
-{% extends 'base.html' %}
+{% extends 'title.html' %}
 
-{% block title %}Home{% endblock %}
+<!--{% block title %}Home{% endblock %}-->
+
+
+
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -13,3 +16,5 @@
   <a href="{% url 'login' %}">login</a>
 {% endif %}
 {% endblock %}
+
+

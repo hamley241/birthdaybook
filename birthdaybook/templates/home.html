@@ -1,15 +1,45 @@
 <!-- templates/home.html-->
-{% extends 'base.html' %}
+{% extends 'title.html' %}
 
-{% block title %}Home{% endblock %}
 
-{% block content %}
-{% if user.is_authenticated %}
+{%block content %}
+<!--================================
+=            Page Title            =
+=================================-->
+
+<section class="page-title bg-title overlay-dark">
+	<div class="container">
+		<div class="row">
+			<div class="col-12 text-center">
+				<div class="title">
+					<h3>You are logged out</h3>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--====  End of Page Title  ====-->
+
+
+<section class="section contact-form">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+				</div>
+			</div>
+		</div>
+      {% if user.is_authenticated %}
   Hi {{ user.username }}!
   <p><a href="{% url 'logout' %}">logout</a></p>
   <meta http-equiv="Refresh" content="1; url=birthdays/">
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
+      <div class="col-12 text-center">
+        <a href="{% url 'login' %}" class="btn btn-main-md">login</a>
+      </div>
 {% endif %}
+	</div>
+</section>
 {% endblock %}

@@ -37,6 +37,7 @@ def index(request):
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     # print(str(request))
     template = loader.get_template('books.html')
+    template = loader.get_template('schedule/books.html')
     # username = request.POST['username']
     # password = request.POST['password']
     # user = authenticate(request, username=username, password=password)
@@ -82,7 +83,7 @@ def detail(request, birthday_id):
         birthday = Book.objects.get(pk=birthday_id)
     except Book.DoesNotExist:
         raise Http404("Question does not exist")
-    return render(request, 'detail.html', {'birthday': birthday})
+    return render(request, 'schedule/update.html', {'birthday': birthday})
 
 def delete(request, birthday_id):
     if not request.user.is_authenticated:
@@ -143,7 +144,7 @@ def add(request):
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
     if request.method == 'GET':
-            return render(request, 'add.html', {'date': "Jun 1 2005"})
+            return render(request, 'schedule/add.html', {'date': "Jun 1 2005"})
 
     name = request.POST['name']
     birthday = request.POST['birthday']
@@ -227,7 +228,7 @@ def search(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     if request.method == 'GET':
-            return render(request, 'add.html', {'date': "Jun 1 2005"})
+            return render(request, 'schedule/search.html', {'date': "Jun 1 2005"})
 
     birthday = request.POST['birthday']
     name = request.POST['name']
@@ -259,7 +260,7 @@ def search(request):
         print(str(e))
         return para_index(request,error_msg= "Server error".format(str(name)))
 
-    template = loader.get_template('search_results.html')
+    template = loader.get_template('schedule/search-results.html')
     context = {
         'birthdays_list': blist,
     }

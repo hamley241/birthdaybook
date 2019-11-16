@@ -1,13 +1,39 @@
-<!-- templates/registration/login.html -->
-{% extends 'base.html' %}
+{% extends 'title.html' %}
 
 {% block title %}Login{% endblock %}
 
-{% block content %}
-<h2>Login</h2>
-<form method="post">
+
+
+
+{%block content %}
+<!--================================
+=            Page Title            =
+=================================-->
+
+<section class="page-title bg-title overlay-dark">
+
+
+</section>
+
+<!--====  End of Page Title  ====-->
+
+
+<section class="section contact-form">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+				</div>
+			</div>
+		</div>
+      <h2>Login</h2>
+<form method="post" class ="row">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
+  <div class="col-md-6">  {{ form.as_p }}</div>
+  <div class="col-12 text-center">
+				<button type="submit" class="btn btn-main-md">submit</button>
+			</div>
 </form>
+	</div>
+</section>
 {% endblock %}
