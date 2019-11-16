@@ -59,7 +59,7 @@ def para_index(request, error_msg=None):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     # print(str(request))
-    template = loader.get_template('books.html')
+    template = loader.get_template('schedule/books.html')
     # username = request.POST['username']
     # password = request.POST['password']
     # user = authenticate(request, username=username, password=password)
@@ -144,12 +144,13 @@ def add(request):
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
 
     if request.method == 'GET':
-            return render(request, 'schedule/add.html', {'date': "Jun 1 2005"})
+            return render(request, 'schedule/add.html', {'date': "Jun 1 2005",'error_msg':None})
 
     name = request.POST['name']
     birthday = request.POST['birthday']
     if not name or not birthday:
-        return para_index(request, error_msg="Inputs are not valid".format(str(name)))
+        return render(request, 'schedule/add.html', {'date': "Jun 1 2005", 'error_msg': "Inputs are not valid".format(str(name))})
+        # return para_index(request, error_msg="Inputs are not valid".format(str(name)))
 
     from dateutil import parser
 
@@ -159,17 +160,28 @@ def add(request):
 
     except IntegrityError as e:
         print("Integrity ")
-        return para_index(request, error_msg="Person {} is already present".format(str(name)))
+        return render(request, 'schedule/add.html',
+                      {'date': "Jun 1 2005", 'error_msg': "Person {} is already present".format(str(name))})
+        # return para_index(request, error_msg="Person {} is already present".format(str(name)))
     except ValueError as e:
         print("Value Error ")
-        return para_index(request, error_msg="Input data is not valid ")
+        return render(request, 'schedule/add.html',
+                      {'date': "Jun 1 2005", 'error_msg': "Input data is not valid"})
+
+        # return para_index(request, error_msg="Input data is not valid ")
     except IllegalMonthError as e:
         print("Illegal Error ")
-        return para_index(request, error_msg="Month in birthday is not valid ")
+        return render(request, 'schedule/add.html',
+                      {'date': "Jun 1 2005", 'error_msg': "Month in birthday is not valid"})
+
+        # return para_index(request, error_msg="Month in birthday is not valid ")
 
     except Exception as e:
         print(str(e))
-        return para_index(request,error_msg= "Server error".format(str(name)))
+        return render(request, 'schedule/add.html',
+                      {'date': "Jun 1 2005", 'error_msg': "Internal server error"})
+
+        # return para_index(request,error_msg= "Server error".format(str(name)))
     return redirect(index)
 
 
@@ -228,13 +240,14 @@ def search(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     if request.method == 'GET':
-            return render(request, 'schedule/search.html', {'date': "Jun 1 2005"})
+            return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': None})
 
     birthday = request.POST['birthday']
     name = request.POST['name']
     dt = None
     if  not birthday and not name:
-        return para_index(request, error_msg="Inputs are not valid")
+        return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': "Invalid inputs"})
+        # return para_index(request, error_msg="Inputs are not valid")
     try:
         if  birthday:
             dt = parser.parse(birthday).date()
@@ -244,17 +257,18 @@ def search(request):
             blist = Book.objects.filter(user=request.user, name=name)
         else:
             blist = Book.objects.filter(user=request.user, name=name, birthday=dt)
-        print(blist)
-        print(type(blist))
+        # print(blist)
+        # print(type(blist))
     except IntegrityError as e:
-        print("Integrity ")
-        return para_index(request, error_msg="Person {} is already present".format(str(name)))
+        # print("Integrity ")
+        return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': "Person {} is already present".format(str(name))})
     except ValueError as e:
         print("Value Error ")
-        return para_index(request, error_msg="Input data is not valid ")
+        return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': "input data is not valid"})
+        # return para_index(request, error_msg="Input data is not valid ")
     except IllegalMonthError as e:
         print("Illegal Error ")
-        return para_index(request, error_msg="Month in birthday is not valid ")
+        return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': "Month in birthday is not valid"})
 
     except Exception as e:
         print(str(e))

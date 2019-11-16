@@ -46,6 +46,11 @@
 <!--  Birthday: <input type="text" name="birthday" value="{{date}}"><br>-->
 <!--    <input type="submit" value="Submit">-->
 <!--</form>-->
+
+		  {% if error_msg %}
+		<h3><font color="red" class="text-center"> {{error_msg}}</font></h3>
+		  {% endif %}
+
 		<form action="./" class="row"  method="POST">
     {% csrf_token %}
 
