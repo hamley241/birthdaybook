@@ -110,7 +110,7 @@ def update(request,birthday_id):
     try:
         dt = parser.parse(birthday).date()
         birthday_obj = Book.objects.get(pk=birthday_id)
-        birthday_obj.name = name
+        birthday_obj.name = name.lower()
         birthday_obj.birthday = dt
         birthday_obj.save()
         # birthday_obj.date =
@@ -156,7 +156,7 @@ def add(request):
 
     try:
         dt = parser.parse(birthday).date()
-        request.user.book_set.create(name=name,birthday=dt)
+        request.user.book_set.create(name=name.lower(),birthday=dt)
 
     except IntegrityError as e:
         print("Integrity ")
@@ -240,7 +240,7 @@ def search(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
     if request.method == 'GET':
-            return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': None})
+        return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': None})
 
     birthday = request.POST['birthday']
     name = request.POST['name']
@@ -248,16 +248,21 @@ def search(request):
     if  not birthday and not name:
         return render(request, 'schedule/search.html', {'date': "Jun 1 2005", 'error_msg': "Invalid inputs"})
         # return para_index(request, error_msg="Inputs are not valid")
+    print(name)
+    print(birthday)
+    name = name.lower()
+    print(Book.objects.filter(user=request.user))
     try:
         if  birthday:
             dt = parser.parse(birthday).date()
         if not name:
             blist = Book.objects.filter(user=request.user, birthday=dt)
         elif not dt:
+            print("Fetching via name {}".format(name))
             blist = Book.objects.filter(user=request.user, name=name)
         else:
             blist = Book.objects.filter(user=request.user, name=name, birthday=dt)
-        # print(blist)
+        print(blist)
         # print(type(blist))
     except IntegrityError as e:
         # print("Integrity ")
