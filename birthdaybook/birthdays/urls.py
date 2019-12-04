@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:birthday_id>/update', views.update, name='update'),
     path('update/', views.detail, name='update1'),
     path('add/', views.add, name='add'),
+    path('remind/', views.remind, name='add'),
     path('search/', views.search, name='search'),
     path('deleteall/', views.delete_everything, name='deleteeverything'),
 ]

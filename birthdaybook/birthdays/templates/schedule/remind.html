@@ -1,0 +1,107 @@
+{% extends 'title.html' %}
+{% block content %}
+
+<!--================================
+=            Page Title            =
+=================================-->
+<br/><br/><br/>
+
+
+<!--==============================
+=            Schedule            =
+===============================-->
+
+<section class="section schedule">
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<div class="section-title">
+					<h3>Today's <span class="alternate">Birthdays</span></h3>
+<!--					<p>Saved birthdays are below</p>-->
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="schedule-tab">
+					<ul class="nav nav-pills text-center">
+<!--					  <li class="nav-item">-->
+<!--					    <a class="nav-link active" href="#nov20" data-toggle="pill">-->
+<!--					    	Saved Birthdays-->
+<!--&lt;!&ndash;					    	<span>{% now "jS F Y" %}</span>&ndash;&gt;-->
+<!--					    </a>-->
+<!--					  </li>-->
+<!--					  <li class="nav-item">-->
+<!--					    <a class="nav-link" href="#nov21" data-toggle="pill">-->
+<!--							Tomorrow-->
+<!--					    	<span>{% now 	 "jS+1 F Y" %}</span>-->
+<!--					    </a>-->
+<!--					  </li>-->
+<!--					  <li class="nav-item">-->
+<!--					    <a class="nav-link" href="#nov22" data-toggle="pill">-->
+<!--							Day-03-->
+<!--					    	<span>22 November 2017</span>-->
+<!--					    </a>-->
+<!--					  </li>-->
+					</ul>
+				</div>
+				<div class="schedule-contents bg-schedule">
+					<div class="tab-content" id="pills-tabContent">
+					  <div class="tab-pane fade show active schedule-item" id="nov20">
+
+
+					  	<!-- Headings -->
+					  	<ul class="m-0 p-0">
+					  		<li class="headings">
+					  			<div class="time">Name</div>
+					  			<div class="speaker">Birthday</div>
+					  			<div class="subject">Edit</div>
+					  			<div class="venue">Delete</div>
+					  		</li>
+								{% if birthdays_list %}
+								{% for birthday in birthdays_list %}
+												  		<li class="schedule-details">
+					  			<div class="block">
+							  		<!-- Speaker -->
+							  		<div class="time">
+										<span class="name"  style=" text-transform: lowercase;">{{ birthday.name }}</span>
+							  		</div>
+
+					  				<!-- time -->
+							  		<div class="speaker">
+							  			<i class="fa fa-clock-o"></i>
+							  			<span class="time">{{birthday.birthday}}</span>
+							  		</div>
+							  		<!-- Subject -->
+									<div class="subject"><a href="/birthdays/{{ birthday.id }}"><img src="https://eventtheme.s3.amazonaws.com/eventre/images/extra/edit-pencil.png" alt="edit-{{ birthday.id }}" height="20" width="20"></a></div>
+							  		<!-- Venue -->
+							  		<div class="venue"> <a href="/birthdays/delete/{{ birthday.id }}/"><img src="https://eventtheme.s3.amazonaws.com/eventre/images/extra/delete-bday.png" alt="delete-{{ birthday.id }}" height="20" width="20"></a></div>
+
+									{% endfor %}
+					  			</div>
+					  		</li>
+
+
+
+							{% else %}
+							<p>No Birthdays are available.</p>
+							{% endif %}
+
+					  	</ul>
+					  </div>
+					  <div class="tab-pane fade schedule-item" id="nov21">
+					  	<!-- Headings -->
+					  	<ul class="m-0 p-0">
+					  	</ul>
+					  </div>
+					</div>
+				</div>
+				
+					<div class="download-button text-left">
+					</div>
+				
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}

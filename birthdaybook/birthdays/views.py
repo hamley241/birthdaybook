@@ -32,6 +32,27 @@ from calendar import IllegalMonthError
 from dateutil import parser
 
 
+def remind(request):
+    if not request.user.is_authenticated:
+        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+    # print(str(request))
+    template = loader.get_template('books.html')
+    template = loader.get_template('schedule/books.html')
+    # username = request.POST['username']
+    # password = request.POST['password']
+    # user = authenticate(request, username=username, password=password)
+    # if user is not None:
+    #     return HttpResponse("Hello, world. You're at the polls index.")
+    # print(dir(request.user))
+
+    print("Index is being callled")
+    alerts = get_alerts(request.user)
+    context = {
+        'birthdays_list': alerts,
+    }
+    print(request.user.book_set.all())
+    return HttpResponse(template.render(context, request))
+
 def index(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
